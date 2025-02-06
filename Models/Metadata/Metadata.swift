@@ -155,7 +155,10 @@ extension Metadata {
         try await update()
     }
 
-    init(migratingFrom oldValue: Metadata, to url: URL? = nil, useFallbackTitleIfNotProvided useFallbackTitle: Bool = false) throws(MetadataError) {
+    init(
+        migratingFrom oldValue: Metadata, to url: URL? = nil,
+        useFallbackTitleIfNotProvided useFallbackTitle: Bool = false
+    ) throws(MetadataError) {
         let url = url ?? oldValue.url
 
         self.url = url

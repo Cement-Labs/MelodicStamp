@@ -10,9 +10,18 @@ import Foundation
 enum TrackMetadata {
     case initialized
     case loaded(Metadata)
+    
+    var unwrapped: Metadata? {
+        switch self {
+        case .initialized:
+            nil
+        case let .loaded(metadata):
+            metadata
+        }
+    }
 }
 
-protocol Track: Identifiable {
+protocol Track: Equatable, Hashable, Identifiable {
     var url: URL { get }
     var metadata: TrackMetadata { get }
 
@@ -21,28 +30,4 @@ protocol Track: Identifiable {
 
 extension Track {
     var id: URL { url }
-}
-
-struct ReferencedTrack: Track {
-    var url: URL
-    var metadata: TrackMetadata
-
-    init(url: URL, metadata: Metadata) {
-        self.url = url
-        self.metadata = .loaded(metadata)
-    }
-
-    @MainActor init(loadingFrom url: URL) async throws(MetadataError) {
-        try await self.init(url: url, metadata: Metadata(loadingFrom: url))
-    }
-}
-
-struct CanonicalTrack: Track {
-    var url: URL
-    var metadata: TrackMetadata
-
-    init(url: URL, metadata: Metadata) {
-        self.url = url
-        self.metadata = .loaded(metadata)
-    }
 }
