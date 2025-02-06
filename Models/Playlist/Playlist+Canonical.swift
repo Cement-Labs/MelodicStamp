@@ -11,17 +11,17 @@ extension CanonicalPlaylist: TypeNameReflectable {}
 
 struct CanonicalPlaylist: Playlist {
     typealias Track = CanonicalTrack
-    
+
     let id: UUID
     var cache: CacheSegments
     var indexer: TrackIndexer
-    
+
     private(set) var tracks: [Track] = []
     var currentTrack: Track?
-    
+
     var playbackMode: PlaybackMode = .loop
     var playbackLooping: Bool = false
-    
+
     init(id: UUID) {
         let url = Self.url(forID: id)
         self.id = id
@@ -34,14 +34,14 @@ extension CanonicalPlaylist {
     static func url(forID id: UUID) -> URL {
         URL.playlists.appending(component: id.uuidString, directoryHint: .isDirectory)
     }
-    
+
     var url: URL { Self.url(forID: id) }
 }
 
 extension CanonicalPlaylist {
     func write(segments: [CacheSegmentIndex] = CacheSegmentIndex.allCases) throws {
         guard !segments.isEmpty else { return }
-        
+
         for segment in segments {
             let data = switch segment {
             case .info:
@@ -53,14 +53,14 @@ extension CanonicalPlaylist {
             }
             try CacheSegments.write(segment: segment, ofData: data, toDirectory: url)
         }
-        
+
         logger.info("Successfully written cache segments \(segments) for playlist at \(url)")
-        
+
         if segments.contains(.artwork) {
             updateFolderIcon()
         }
     }
-    
+
     private func updateFolderIcon() {
         Task.detached(priority: .background) {
             NSWorkspace.shared.setIcon(

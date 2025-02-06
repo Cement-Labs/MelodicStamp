@@ -14,21 +14,21 @@ extension CanonicalPlaylist {
         case state = ".state"
         case artwork = ".artwork"
     }
-    
+
     struct Info: CacheSegment {
         typealias Index = CacheSegmentIndex
-        
+
         var index: Index { .info }
-        
+
         var title: String = ""
         var description: String = ""
     }
 
     struct State: CacheSegment {
         typealias Index = CacheSegmentIndex
-        
+
         var index: Index { .state }
-        
+
         var currentTrackURL: URL?
         var currentTrackElapsedTime: TimeInterval = .zero
         var playbackMode: PlaybackMode = Defaults[.defaultPlaybackMode]
@@ -37,9 +37,9 @@ extension CanonicalPlaylist {
 
     struct Artwork: CacheSegment {
         typealias Index = CacheSegmentIndex
-        
+
         var index: Index { .artwork }
-        
+
         var tiffRepresentation: Data?
 
         var image: NSImage? {
@@ -52,7 +52,7 @@ extension CanonicalPlaylist {
 extension CanonicalPlaylist {
     struct CacheSegments: MelodicStamp.CacheSegments {
         typealias Index = CacheSegmentIndex
-        
+
         var info: Info
         var state: State
         var artwork: Artwork

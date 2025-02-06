@@ -5,10 +5,10 @@
 ////  Created by KrLite on 2025/1/28.
 ////
 //
-//import Luminare
-//import SwiftUI
+// import Luminare
+// import SwiftUI
 //
-//struct LibraryItemView: View {
+// struct LibraryItemView: View {
 //    @Environment(LibraryModel.self) private var library
 //    @Environment(PlaylistModel.self) private var playlist
 //    @Environment(PlayerModel.self) private var player
@@ -159,10 +159,10 @@
 //            value: CreationParameters(playlist: .canonical(item.id))
 //        )
 //    }
-//}
+// }
 //
-//#if DEBUG
+// #if DEBUG
 ////    #Preview(traits: .modifier(PreviewEnvironmentsModifier())) {
 ////        LibraryItemView(item: PreviewEnvironmentsModifier.samplePlaylist, isSelected: false)
 ////    }
-//#endif
+// #endif

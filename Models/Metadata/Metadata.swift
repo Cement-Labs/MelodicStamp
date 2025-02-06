@@ -146,7 +146,7 @@ extension Metadata {
             await self.generateThumbnail()
         }
     }
-    
+
     init(initializingFrom url: URL) {
         self.properties = .init()
         self.state = .loading

@@ -36,7 +36,7 @@ struct MetadataEditingState: OptionSet {
     var metadataSources: [any Track] { get }
     var hasMetadata: Bool { get }
     var state: MetadataEditingState { get }
-    
+
     mutating func updated(_ url: URL)
     mutating func wrote(_ url: URL)
 }
@@ -45,6 +45,7 @@ extension MetadataEditorProtocol {
     var metadataSet: Set<Metadata> {
         Set(metadataSources.compactMap(\.metadata.unwrapped))
     }
+
     var hasMetadata: Bool { !metadataSet.isEmpty }
 
     var state: MetadataEditingState {
@@ -66,9 +67,9 @@ extension MetadataEditorProtocol {
 
         return result
     }
-    
-    func updated(_ url: URL) {}
-    func wrote(_ url: URL) {}
+
+    func updated(_: URL) {}
+    func wrote(_: URL) {}
 
     @MainActor func restoreAll() {
         metadataSet.forEach { $0.restore() }

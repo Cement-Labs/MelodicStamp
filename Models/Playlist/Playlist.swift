@@ -9,12 +9,12 @@ import AppKit
 
 protocol Playlist: Equatable, Hashable, Identifiable {
     associatedtype Track: MelodicStamp.Track
-    
+
     var id: UUID { get }
 
     var tracks: [Track] { get }
     var currentTrack: Track? { get set }
-    
+
     var playbackMode: PlaybackMode { get set }
     var playbackLooping: Bool { get set }
 

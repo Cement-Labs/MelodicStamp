@@ -19,7 +19,7 @@ extension CacheSegmentIndex where RawValue == String {
 
 protocol CacheSegment: Equatable, Hashable, Codable {
     associatedtype Index: CacheSegmentIndex
-    
+
     var index: Index { get }
 }
 
@@ -32,7 +32,7 @@ extension CacheSegments {
         let url = segment.url(relativeTo: root)
         return try Data(contentsOf: url)
     }
-    
+
     static func write(segment: Index, ofData fileData: Data, toDirectory root: URL) throws {
         let url = segment.url(relativeTo: root)
         try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)

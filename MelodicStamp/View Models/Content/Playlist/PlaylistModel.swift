@@ -105,7 +105,7 @@ extension PlaylistModel {
 //    }
 }
 
-//extension PlaylistModel {
+// extension PlaylistModel {
 //    @MainActor func bindTo(_ id: UUID, mode: Playlist.Mode = .referenced) {
 //        guard !playlist.mode.isCanonical else { return }
 //        if mode.isCanonical, let playlist = Playlist(loadingWith: id) {
@@ -125,9 +125,9 @@ extension PlaylistModel {
 //    func write(segments: [Playlist.Segment] = Playlist.Segment.allCases) throws {
 //        try playlist.write(segments: segments)
 //    }
-//}
+// }
 
-//extension PlaylistModel {
+// extension PlaylistModel {
 //    func getTrack(at url: URL) -> Track? {
 //        playlist.getTrack(at: url)
 //    }
@@ -139,9 +139,9 @@ extension PlaylistModel {
 //    func getOrCreateTrack(at url: URL) async -> Track? {
 //        await playlist.getOrCreateTrack(at: url)
 //    }
-//}
+// }
 //
-//extension PlaylistModel {
+// extension PlaylistModel {
 //    @MainActor func move(fromOffsets indices: IndexSet, toOffset destination: Int) {
 //        playlist.move(fromOffsets: indices, toOffset: destination)
 //
@@ -190,4 +190,4 @@ extension PlaylistModel {
 //    @MainActor func clear() async {
 //        await remove(playlist.map(\.url))
 //    }
-//}
+// }

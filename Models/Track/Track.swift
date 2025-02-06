@@ -10,7 +10,7 @@ import Foundation
 enum TrackMetadata: Equatable, Hashable {
     case initialized
     case loaded(Metadata)
-    
+
     var unwrapped: Metadata? {
         switch self {
         case .initialized:

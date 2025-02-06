@@ -13,21 +13,21 @@ struct CanonicalTrack: Track {
     let url: URL
     private(set) var metadata: TrackMetadata
     private(set) var cache: CacheSegments
-    
+
     init(url: URL, metadata: Metadata) {
         self.url = url
         self.metadata = .loaded(metadata)
         self.cache = (try? .init(loadingFrom: url.deletingPathExtension())) ?? .init()
     }
-    
+
     @MainActor init?(
         migratingFrom oldValue: some Track, to url: URL?,
         useFallbackTitleIfNotProvided useFallbackTitle: Bool = false
     ) throws(MetadataError) {
         guard let metadata = oldValue.metadata.unwrapped else { return nil }
-        self.init(
+        try self.init(
             url: url ?? oldValue.url,
-            metadata: try Metadata(migratingFrom: metadata, to: url, useFallbackTitleIfNotProvided: useFallbackTitle)
+            metadata: Metadata(migratingFrom: metadata, to: url, useFallbackTitleIfNotProvided: useFallbackTitle)
         )
         updateCache()
     }
@@ -44,9 +44,9 @@ extension CanonicalTrack {
             ThumbnailMaker.getCover(from: attachedPictures)?.image?.tiffRepresentation
         } else { nil }
     }
-    
+
     @MainActor mutating func loadMetadata() {
-        switch self.metadata {
+        switch metadata {
         case .initialized:
             metadata = .loaded(Metadata(initializingFrom: url))
         case .loaded:
@@ -58,7 +58,7 @@ extension CanonicalTrack {
 extension CanonicalTrack {
     func write(segments: [CacheSegmentIndex] = CacheSegmentIndex.allCases) throws {
         guard !segments.isEmpty else { return }
-        
+
         for segment in segments {
             let data = switch segment {
             case .info:
@@ -68,14 +68,14 @@ extension CanonicalTrack {
             }
             try CacheSegments.write(segment: segment, ofData: data, toDirectory: url)
         }
-        
+
         logger.info("Successfully written cache segments \(segments) for track at \(url)")
-        
+
         if segments.contains(.artwork) {
             updateFolderIcon()
         }
     }
-    
+
     private func updateFolderIcon() {
         Task.detached(priority: .background) {
             NSWorkspace.shared.setIcon(
