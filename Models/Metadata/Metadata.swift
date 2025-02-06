@@ -151,8 +151,8 @@ extension Metadata {
         self.properties = .init()
         self.state = .loading
         self.url = url
-        
-        try await self.update()
+
+        try await update()
     }
 
     init(migratingFrom oldValue: Metadata, to url: URL? = nil, useFallbackTitleIfNotProvided useFallbackTitle: Bool = false) throws(MetadataError) {

@@ -26,21 +26,21 @@ extension Track {
 struct ReferencedTrack: Track {
     var url: URL
     var metadata: TrackMetadata
-    
+
     init(url: URL, metadata: Metadata) {
         self.url = url
         self.metadata = .loaded(metadata)
     }
-    
+
     @MainActor init(loadingFrom url: URL) async throws(MetadataError) {
-        self.init(url: url, metadata: try await Metadata(loadingFrom: url))
+        try await self.init(url: url, metadata: Metadata(loadingFrom: url))
     }
 }
 
 struct CanonicalTrack: Track {
     var url: URL
     var metadata: TrackMetadata
-    
+
     init(url: URL, metadata: Metadata) {
         self.url = url
         self.metadata = .loaded(metadata)
