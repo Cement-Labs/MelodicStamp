@@ -19,15 +19,15 @@ struct AboutView: View {
         VStack(spacing: 25) {
             VStack {
                 appIconView()
-                
+
                 Text(appNameText)
                     .font(.title3)
                     .bold()
-                
+
                 versionView()
                     .font(.caption)
             }
-            
+
             VStack {
                 Button {
                     openURL(.organization)
@@ -35,7 +35,7 @@ struct AboutView: View {
                     HStack(alignment: .firstTextBaseline, spacing: 12) {
                         Text(copyrightText)
                             .bold()
-                        
+
                         Image(.cementLabsBar)
                             .resizable()
                             .scaledToFill()
@@ -47,7 +47,7 @@ struct AboutView: View {
                     .fixedSize()
                     .foregroundStyle(.tertiary)
                 }
-                
+
                 Button {
                     openURL(.repository)
                 } label: {
@@ -80,7 +80,7 @@ struct AboutView: View {
         ZStack {
             Image(.appIconBackground)
                 .resizable()
-            
+
             Image(.appIconForeground)
                 .resizable()
                 .motionCard(scale: 1.02, angle: .degrees(5))
