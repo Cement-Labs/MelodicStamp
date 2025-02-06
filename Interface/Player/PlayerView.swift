@@ -108,7 +108,7 @@ struct PlayerView: View {
                 ShrinkableMarqueeScrollView {
                     MusicTitle(track: playlist.currentTrack)
                 }
-                .animation(.default, value: playlist.currentTrack)
+//                .animation(.default, value: playlist.currentTrack)
                 .matchedGeometryEffect(id: PlayerNamespace.title, in: namespace!)
 
                 if player.hasCurrentTrack {

@@ -1,6 +1,6 @@
 //
 //  SpectrumView.swift
-//  Melodic Stamp
+//  MelodicStamp
 //
 //  Created by Xinshao_Air on 2025/1/21.
 //

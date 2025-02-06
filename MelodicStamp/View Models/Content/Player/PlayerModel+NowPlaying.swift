@@ -1,6 +1,6 @@
 //
 //  PlayerModel+NowPlaying.swift
-//  Melodic Stamp
+//  MelodicStamp
 //
 //  Created by KrLite on 2025/1/22.
 //
@@ -31,10 +31,10 @@ extension PlayerModel {
         infoCenter.nowPlayingInfo = info
     }
 
-    func updateNowPlayingMetadataInfo(from track: Track?) {
+    func updateNowPlayingMetadataInfo(from track: (any Track)?) {
         Task { @MainActor in
             if let track {
-                track.metadata.updateNowPlayingInfo()
+                track.metadata.unwrapped?.updateNowPlayingInfo()
             } else {
                 Metadata.resetNowPlayingInfo()
             }

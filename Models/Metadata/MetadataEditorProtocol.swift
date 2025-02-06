@@ -1,6 +1,6 @@
 //
 //  MetadataEditorProtocol.swift
-//  Melodic Stamp
+//  MelodicStamp
 //
 //  Created by KrLite on 2025/1/26.
 //
@@ -33,12 +33,18 @@ struct MetadataEditingState: OptionSet {
 }
 
 @MainActor protocol MetadataEditorProtocol: Modifiable {
-    var metadataSet: Set<Metadata> { get }
+    var metadataSources: [any Track] { get }
     var hasMetadata: Bool { get }
     var state: MetadataEditingState { get }
+    
+    mutating func updated(_ url: URL)
+    mutating func wrote(_ url: URL)
 }
 
 extension MetadataEditorProtocol {
+    var metadataSet: Set<Metadata> {
+        Set(metadataSources.compactMap(\.metadata.unwrapped))
+    }
     var hasMetadata: Bool { !metadataSet.isEmpty }
 
     var state: MetadataEditingState {
@@ -60,6 +66,9 @@ extension MetadataEditorProtocol {
 
         return result
     }
+    
+    func updated(_ url: URL) {}
+    func wrote(_ url: URL) {}
 
     @MainActor func restoreAll() {
         metadataSet.forEach { $0.restore() }
@@ -67,12 +76,13 @@ extension MetadataEditorProtocol {
 
     func updateAll(completion: (() -> ())? = nil) {
         var pending: Set<URL> = Set(metadataSet.map(\.url))
-        for metadata in metadataSet {
+        for source in metadataSources {
+            guard let metadata = source.metadata.unwrapped, metadataSet.contains(metadata) else { continue }
             Task.detached {
                 do {
-                    try await metadata.update {
-                        pending.remove(metadata.url)
-                    }
+                    try await metadata.update()
+                    await updated(source.url)
+                    pending.remove(metadata.url)
                 } catch {
                     pending.remove(metadata.url)
                 }
@@ -93,12 +103,13 @@ extension MetadataEditorProtocol {
 
     func writeAll(completion: (() -> ())? = nil) {
         var pending: Set<URL> = Set(metadataSet.map(\.url))
-        for metadata in metadataSet {
+        for source in metadataSources {
+            guard let metadata = source.metadata.unwrapped, metadataSet.contains(metadata) else { continue }
             Task.detached {
                 do {
-                    try await metadata.write {
-                        pending.remove(metadata.url)
-                    }
+                    try await metadata.write()
+                    await wrote(source.url)
+                    pending.remove(metadata.url)
                 } catch {
                     pending.remove(metadata.url)
                 }

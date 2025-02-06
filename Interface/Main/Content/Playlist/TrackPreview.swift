@@ -1,6 +1,6 @@
 //
 //  TrackPreview.swift
-//  Melodic Stamp
+//  MelodicStamp
 //
 //  Created by KrLite on 2025/1/25.
 //
@@ -9,13 +9,13 @@ import Luminare
 import SwiftUI
 
 struct TrackPreview: View {
-    var track: Track
+    var track: any Track
     var titleEntry: KeyPath<MetadataBatchEditingEntry, String?> = \.initial
 
     var body: some View {
         HStack(spacing: 12) {
             Group {
-                if let thumbnail = track.metadata.thumbnail {
+                if let thumbnail = track.metadata.unwrapped?.thumbnail {
                     MusicCover(images: [thumbnail], cornerRadius: 2)
                 } else {
                     MusicCover(cornerRadius: 2)
@@ -23,7 +23,7 @@ struct TrackPreview: View {
             }
             .frame(width: 50)
             .overlay(alignment: .topLeading) {
-                if let duration = track.metadata.properties.duration.map(Duration.init) {
+                if let duration = track.metadata.unwrapped?.properties.duration.map(Duration.init) {
                     DurationText(duration: duration)
                         .font(.system(size: 7))
                         .padding(.horizontal, 2)
@@ -36,7 +36,7 @@ struct TrackPreview: View {
                 HStack {
                     MusicTitle(track: track, mode: .title, entry: titleEntry)
 
-                    switch track.metadata.state {
+                    switch track.metadata.unwrapped?.state {
                     case let .interrupted(error), let .dropped(error):
                         Image(systemSymbol: .exclamationmarkCircleFill)
                             .foregroundStyle(.red)
@@ -58,7 +58,7 @@ struct TrackPreview: View {
 }
 
 #if DEBUG
-    #Preview {
-        TrackPreview(track: PreviewEnvironmentsModifier.sampleTrack)
-    }
+//    #Preview {
+//        TrackPreview(track: PreviewEnvironmentsModifier.sampleTrack)
+//    }
 #endif

@@ -15,7 +15,7 @@ struct TrackView: View {
 
     @Environment(\.luminareAnimation) private var animation
 
-    var track: Track
+    var track: any Track
     var isSelected: Bool
 
     @State private var isHovering: Bool = false
@@ -27,8 +27,8 @@ struct TrackView: View {
 
     var body: some View {
         HStack(alignment: .center) {
-            let metadataState = track.metadata.state
-            let isMetadataModified = track.metadata.isModified
+            let metadataState = track.metadata.unwrapped?.state
+            let isMetadataModified = track.metadata.unwrapped?.isModified ?? false
 
             VStack(alignment: .leading, spacing: 2) {
                 HStack {
@@ -37,7 +37,7 @@ struct TrackView: View {
                         case .loading:
                             Text("Loading…")
                                 .foregroundStyle(.placeholder)
-                        case .fine, .saving, .interrupted:
+                        case .none, .fine, .saving, .interrupted:
                             titleView()
                         case .dropped:
                             Text(MusicTitle.fallbackTitle(for: track))
@@ -117,16 +117,16 @@ struct TrackView: View {
         .onHover { hover in
             isHovering = hover
         }
-        .onChange(of: track.metadata.state) { _, newValue in
-            guard newValue.isError else { return }
-            wiggleAnimationTrigger.toggle()
-        }
-        .onReceive(track.metadata.applyPublisher) { _ in
-            bounceAnimationTrigger.toggle()
-
-            guard isCurrentTrack else { return }
-            track.metadata.updateNowPlayingInfo()
-        }
+//        .onChange(of: track.metadata.state) { _, newValue in
+//            guard newValue.isError else { return }
+//            wiggleAnimationTrigger.toggle()
+//        }
+//        .onReceive(track.metadata.applyPublisher) { _ in
+//            bounceAnimationTrigger.toggle()
+//
+//            guard isCurrentTrack else { return }
+//            track.metadata.updateNowPlayingInfo()
+//        }
     }
 
     private var opacity: CGFloat {
@@ -148,7 +148,7 @@ struct TrackView: View {
     }
 
     private var isCurrentTrack: Bool {
-        playlist.currentTrack == track
+        playlist.currentTrack === track
     }
 
     private var hasControl: Bool {
@@ -205,7 +205,7 @@ struct TrackView: View {
 }
 
 #if DEBUG
-    #Preview(traits: .modifier(PreviewEnvironmentsModifier())) {
-        TrackView(track: PreviewEnvironmentsModifier.sampleTrack, isSelected: false)
-    }
+//    #Preview(traits: .modifier(PreviewEnvironmentsModifier())) {
+//        TrackView(track: PreviewEnvironmentsModifier.sampleTrack, isSelected: false)
+//    }
 #endif

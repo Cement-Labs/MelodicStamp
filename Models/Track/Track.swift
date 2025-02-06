@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum TrackMetadata {
+enum TrackMetadata: Equatable, Hashable {
     case initialized
     case loaded(Metadata)
     

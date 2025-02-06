@@ -1,6 +1,6 @@
 //
-//  Playlist+CacheSegments.swift
-//  Models
+//  Playlist+Canonical+CacheSegments.swift
+//  MelodicStamp
 //
 //  Created by KrLite on 2025/1/28.
 //
@@ -8,7 +8,7 @@
 import Defaults
 import SwiftUI
 
-extension Playlist {
+extension CanonicalPlaylist {
     enum CacheSegmentIndex: String, MelodicStamp.CacheSegmentIndex {
         case info = ".info"
         case state = ".state"
@@ -49,7 +49,7 @@ extension Playlist {
     }
 }
 
-extension Playlist {
+extension CanonicalPlaylist {
     struct CacheSegments: MelodicStamp.CacheSegments {
         typealias Index = CacheSegmentIndex
         

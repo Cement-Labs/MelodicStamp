@@ -151,7 +151,7 @@ extension PlayerModel {
 
     // MARK: Playlist
 
-    private var currentTrack: Track? {
+    private var currentTrack: (any Track)? {
         get { playlist?.currentTrack }
         set { playlist?.currentTrack = newValue }
     }
@@ -259,7 +259,7 @@ extension PlayerModel {
         play(track)
     }
 
-    func play(_ track: Track?) {
+    func play(_ track: (any Track)?) {
         if let track {
             currentTrack = track
             player.play(track)

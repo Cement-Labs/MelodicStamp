@@ -30,9 +30,9 @@ import SwiftUI
             let playlist = PlaylistModel(library: library)
             let player = PlayerModel(BlankPlayer(), library: library, playlist: playlist)
 
-            playlist.playlist = samplePlaylist
-            playlist.selectedTracks = [sampleTrack]
-            player.play(sampleTrack)
+//            playlist.playlist = samplePlaylist
+//            playlist.selectedTracks = [sampleTrack]
+//            player.play(sampleTrack)
 
             let floatingWindows = FloatingWindowsModel()
             let presentationManager = PresentationManagerModel(windowManager: windowManager)
@@ -91,45 +91,45 @@ import SwiftUI
             ])
         }
 
-        static var sampleMetadata: Metadata {
-            let metadata = AudioMetadata()
+//        static var sampleMetadata: Metadata {
+//            let metadata = AudioMetadata()
+//
+//            metadata.attachPicture(sampleArtwork.attachedPicture(of: .other)!)
+//            metadata.title = "A Song"
+//            metadata.artist = "Artist 1/Artist 2"
+//            metadata.lyrics = sampleLyrics
+//
+//            let result = Metadata(url: sampleURL, from: metadata, with: sampleProperties)
+//            result[extracting: \.title]?.current = "A Song (Modified)"
+//            return result
+//        }
 
-            metadata.attachPicture(sampleArtwork.attachedPicture(of: .other)!)
-            metadata.title = "A Song"
-            metadata.artist = "Artist 1/Artist 2"
-            metadata.lyrics = sampleLyrics
+//        static var sampleTrack: Track {
+//            Track(
+//                url: sampleURL,
+//                metadata: sampleMetadata
+//            )
+//        }
 
-            let result = Metadata(url: sampleURL, from: metadata, with: sampleProperties)
-            result[extracting: \.title]?.current = "A Song (Modified)"
-            return result
-        }
+//        static var samplePlaylistSegments: Playlist.Segments {
+//            var segments = Playlist.Segments()
+//
+//            segments.info.title = "Sample Playlist"
+//            segments.info.description = "A sample playlist."
+//            segments.artwork.tiffRepresentation = sampleArtwork.tiffRepresentation
+//
+//            return segments
+//        }
 
-        static var sampleTrack: Track {
-            Track(
-                url: sampleURL,
-                metadata: sampleMetadata
-            )
-        }
-
-        static var samplePlaylistSegments: Playlist.Segments {
-            var segments = Playlist.Segments()
-
-            segments.info.title = "Sample Playlist"
-            segments.info.description = "A sample playlist."
-            segments.artwork.tiffRepresentation = sampleArtwork.tiffRepresentation
-
-            return segments
-        }
-
-        static var samplePlaylist: Playlist {
-            var playlist = Playlist.referenced()
-
-            playlist.segments = samplePlaylistSegments
-            playlist.tracks = [sampleTrack]
-            playlist.currentTrack = sampleTrack
-
-            return playlist
-        }
+//        static var samplePlaylist: Playlist {
+//            var playlist = Playlist.referenced()
+//
+//            playlist.segments = samplePlaylistSegments
+//            playlist.tracks = [sampleTrack]
+//            playlist.currentTrack = sampleTrack
+//
+//            return playlist
+//        }
 
         static var sampleLyrics: String {
             """

@@ -47,7 +47,7 @@ class SFBAudioEnginePlayer: NSObject, Player {
         }
     }
 
-    func play(_ track: Track) {
+    func play(_ track: any Track) {
         do {
             if let decoder = try Self.decoder(for: track) {
                 try player.play(decoder)
@@ -57,7 +57,7 @@ class SFBAudioEnginePlayer: NSObject, Player {
         }
     }
 
-    func enqueue(_ track: Track) {
+    func enqueue(_ track: any Track) {
         do {
             if let decoder = try Self.decoder(for: track) {
                 try player.enqueue(decoder)
@@ -166,7 +166,7 @@ class SFBAudioEnginePlayer: NSObject, Player {
 }
 
 extension SFBAudioEnginePlayer {
-    static func decoder(for track: Track, enablesDoP: Bool = false) throws -> PCMDecoding? {
+    static func decoder(for track: any Track, enablesDoP: Bool = false) throws -> PCMDecoding? {
         let url = track.url
 
         let pathExtension = url.pathExtension.lowercased()

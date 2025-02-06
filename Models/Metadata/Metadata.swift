@@ -146,6 +146,12 @@ extension Metadata {
             await self.generateThumbnail()
         }
     }
+    
+    init(initializingFrom url: URL) {
+        self.properties = .init()
+        self.state = .loading
+        self.url = url
+    }
 
     init(loadingFrom url: URL) async throws(MetadataError) {
         self.properties = .init()
@@ -567,11 +573,8 @@ extension Metadata {
         await generateThumbnail()
     }
 
-    nonisolated func write(completion: (() -> ())? = nil) async throws(MetadataError) {
-        guard await state.isLoaded, await isModified else {
-            completion?()
-            return
-        }
+    nonisolated func write() async throws(MetadataError) {
+        guard await state.isLoaded, await isModified else { return }
 
         guard url.isFileExist else {
             await updateState(to: state.with(error: .fileNotFound))
@@ -589,9 +592,7 @@ extension Metadata {
         logger.info("Started writing metadata to \(self.url)")
 
         try await overwrite()
-
         await updateState(to: .fine)
-        completion?()
 
         logger.info("Successfully written metadata to \(self.url)")
     }

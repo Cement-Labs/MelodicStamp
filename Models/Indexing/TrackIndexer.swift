@@ -1,6 +1,6 @@
 //
 //  TrackIndexer.swift
-//  Melodic Stamp
+//  MelodicStamp
 //
 //  Created by KrLite on 2025/1/29.
 //
@@ -25,15 +25,15 @@ extension TrackIndexer {
             .appendingPathExtension(element.value)
     }
 
-    func loadTracks() -> AsyncStream<(Int, Track)> {
+    func loadTracks() -> AsyncStream<(Int, CanonicalTrack)> {
         .init {
             continuation in
             guard !value.isEmpty else { return continuation.finish() }
 
             Task.detached {
                 for (index, element) in value.enumerated() {
-                    let track = await Track(loadingFrom: trackURL(for: element))
-                    continuation.yield((index, track))
+//                    let track = await CanonicalTrack(loadingFrom: trackURL(for: element))
+//                    continuation.yield((index, track))
                 }
             }
         }

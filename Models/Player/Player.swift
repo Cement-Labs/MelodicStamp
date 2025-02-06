@@ -21,8 +21,8 @@ protocol Player {
     var playbackTime: PlaybackTime? { get }
     var playbackVolume: CGFloat { get }
 
-    func play(_ track: Track)
-    func enqueue(_ track: Track)
+    func play(_ track: any Track)
+    func enqueue(_ track: any Track)
 
     func play()
     func pause()
@@ -103,11 +103,11 @@ class BlankPlayer: Player {
     var playbackTime: PlaybackTime? = .init(duration: .seconds(60), elapsed: .zero)
     var playbackVolume: CGFloat = 1
 
-    func play(_: Track) {
+    func play(_: any Track) {
         isPlaying = true
     }
 
-    func enqueue(_: Track) {}
+    func enqueue(_: any Track) {}
 
     func play() {
         isPlaying = true

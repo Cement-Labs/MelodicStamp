@@ -1,6 +1,6 @@
 //
 //  View+Animations.swift
-//  Melodic Stamp
+//  MelodicStamp
 //
 //  Created by KrLite on 2025/1/26.
 //

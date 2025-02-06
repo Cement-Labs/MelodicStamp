@@ -1,6 +1,6 @@
 //
 //  PlaylistIndexer.swift
-//  Melodic Stamp
+//  MelodicStamp
 //
 //  Created by KrLite on 2025/1/29.
 //
@@ -14,15 +14,15 @@ struct PlaylistIndexer: Indexer {
 }
 
 extension PlaylistIndexer {
-    func loadPlaylists() -> AsyncStream<(Int, Playlist)> {
+    func loadPlaylists() -> AsyncStream<(Int, CanonicalPlaylist)> {
         .init {
             continuation in
             guard !value.isEmpty else { return continuation.finish() }
 
             Task.detached {
                 for (index, element) in value.enumerated() {
-                    guard let playlist = Playlist(loadingWith: element) else { continue }
-                    continuation.yield((index, playlist))
+//                    guard let playlist = CanonicalPlaylist(loadingWith: element) else { continue }
+//                    continuation.yield((index, playlist))
                 }
             }
         }

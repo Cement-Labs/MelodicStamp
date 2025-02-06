@@ -1,6 +1,6 @@
 //
 //  LibraryToolbar.swift
-//  Melodic Stamp
+//  MelodicStamp
 //
 //  Created by KrLite on 2025/1/28.
 //
@@ -21,27 +21,30 @@ struct LibraryToolbar: ToolbarContent {
     var body: some ToolbarContent {
         @Bindable var playlist = playlist
 
-        if !playlist.mode.isCanonical {
-            ToolbarItem {
-                Button {
-                    presentationManager.isPlaylistSegmentsSheetPresented = asksForPlaylistInformation
-                    Task.detached {
-                        try await playlist.makeCanonical()
-                    }
-                } label: {
-                    Label("Add to Library", systemSymbol: .trayFullFill)
-                }
-                .disabled(!playlist.canMakeCanonical)
-            }
-        } else {
-            ToolbarItem {
-                Button {
-                    presentationManager.isPlaylistRemovalAlertPresented = true
-                } label: {
-                    Label("Remove from Library", systemSymbol: .trashFill)
-                }
-                .foregroundStyle(.red)
-            }
+        ToolbarItem {
+            Button("Test") {}
         }
+//        if !playlist.mode.isCanonical {
+//            ToolbarItem {
+//                Button {
+//                    presentationManager.isPlaylistSegmentsSheetPresented = asksForPlaylistInformation
+//                    Task.detached {
+//                        try await playlist.makeCanonical()
+//                    }
+//                } label: {
+//                    Label("Add to Library", systemSymbol: .trayFullFill)
+//                }
+//                .disabled(!playlist.canMakeCanonical)
+//            }
+//        } else {
+//            ToolbarItem {
+//                Button {
+//                    presentationManager.isPlaylistRemovalAlertPresented = true
+//                } label: {
+//                    Label("Remove from Library", systemSymbol: .trashFill)
+//                }
+//                .foregroundStyle(.red)
+//            }
+//        }
     }
 }
