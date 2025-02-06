@@ -9,6 +9,6 @@ import Foundation
 
 extension PlaylistModel: MetadataEditorProtocol {
     var metadataSet: Set<Metadata> {
-        Set(tracks.map(\.metadata).filter(\.state.isInitialized))
+        Set(tracks.map(\.metadata).filter(\.state.isLoaded))
     }
 }

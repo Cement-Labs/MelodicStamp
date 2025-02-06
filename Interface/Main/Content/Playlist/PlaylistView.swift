@@ -318,7 +318,7 @@ struct PlaylistView: View {
     // MARK: - Track View
 
     @ViewBuilder private func trackView(for track: Track) -> some View {
-        let isInitialized = track.metadata.state.isInitialized
+        let isLoaded = track.metadata.state.isLoaded
         let isModified = track.metadata.isModified
 
         TrackView(
@@ -327,7 +327,7 @@ struct PlaylistView: View {
         )
         .redacted(reason: track.metadata.state == .loading ? .placeholder : [])
         .swipeActions {
-            if isInitialized {
+            if isLoaded {
                 // MARK: Play
 
                 Button {
@@ -348,7 +348,7 @@ struct PlaylistView: View {
             }
         }
         .swipeActions(edge: .leading) {
-            if isInitialized {
+            if isLoaded {
                 // MARK: Save Metadata
 
                 if isModified {

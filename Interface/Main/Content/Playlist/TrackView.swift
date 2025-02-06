@@ -152,7 +152,7 @@ struct TrackView: View {
     }
 
     private var hasControl: Bool {
-        isHovering || (track.metadata.state.isInitialized && track.metadata.thumbnail != nil)
+        isHovering || (track.metadata.state.isLoaded && track.metadata.thumbnail != nil)
     }
 
     @ViewBuilder private func titleView() -> some View {
@@ -166,15 +166,15 @@ struct TrackView: View {
     }
 
     @ViewBuilder private func coverView() -> some View {
-        let isInitialized = track.metadata.state.isInitialized
+        let isLoaded = track.metadata.state.isLoaded
 
         ZStack {
-            if isInitialized, let thumbnail = track.metadata.thumbnail {
+            if isLoaded, let thumbnail = track.metadata.thumbnail {
                 MusicCover(
                     images: [thumbnail], hasPlaceholder: false, cornerRadius: 4
                 )
                 .overlay {
-                    if isHovering, isInitialized {
+                    if isHovering, isLoaded {
                         Rectangle()
                             .foregroundStyle(.black)
                             .opacity(0.25)
@@ -182,12 +182,12 @@ struct TrackView: View {
                     }
                 }
 
-                if isHovering, isInitialized {
+                if isHovering, isLoaded {
                     Image(systemSymbol: .playFill)
                         .foregroundStyle(.white)
                 }
             } else {
-                if isHovering, isInitialized {
+                if isHovering, isLoaded {
                     Image(systemSymbol: .playFill)
                         .foregroundStyle(.primary)
                 }

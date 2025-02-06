@@ -18,7 +18,7 @@ import SwiftUI
         guard let playlist else {
             return []
         }
-        return Set(playlist.selectedTracks.map(\.metadata).filter(\.state.isInitialized))
+        return Set(playlist.selectedTracks.map(\.metadata).filter(\.state.isLoaded))
     }
 
     subscript<V: Equatable & Hashable>(extracting keyPath: WritableKeyPath<Metadata, MetadataEntry<V>>) -> MetadataBatchEditingEntries<V> {

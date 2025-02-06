@@ -31,7 +31,7 @@ extension Metadata {
         case interrupted(MetadataError)
         case dropped(MetadataError)
 
-        var isInitialized: Bool {
+        var isLoaded: Bool {
             switch self {
             case .fine, .saving, .interrupted:
                 true
@@ -135,7 +135,7 @@ extension Metadata {
         restoreSubject.eraseToAnyPublisher()
     }
 
-    init(url: URL, from metadata: AudioMetadata, with properties: AudioProperties = .init()) {
+    init(url: URL, metadata: AudioMetadata, properties: AudioProperties = .init()) {
         self.properties = properties
         self.state = .fine
         self.url = url
@@ -147,18 +147,12 @@ extension Metadata {
         }
     }
 
-    init(loadingFrom url: URL, completion: (() -> ())? = nil) {
+    init(loadingFrom url: URL) async throws(MetadataError) {
         self.properties = .init()
         self.state = .loading
         self.url = url
-
-        Task.detached(priority: .background) {
-            do {
-                try await self.update(completion: completion)
-            } catch {
-                completion?()
-            }
-        }
+        
+        try await self.update()
     }
 
     init(migratingFrom oldValue: Metadata, to url: URL? = nil, useFallbackTitleIfNotProvided useFallbackTitle: Bool = false) throws(MetadataError) {
@@ -228,18 +222,18 @@ extension Metadata {
                 title?.current = fallbackTitle
             }
 
-            Task {
+            Task.detached(priority: .background) {
                 try await self.overwrite()
 
                 Task { @MainActor in
-                    title?.initial = fallbackTitle
+                    self.title?.initial = fallbackTitle
                 }
             }
         }
     }
 
     private var restorables: [any Restorable] {
-        guard state.isInitialized else { return [] }
+        guard state.isLoaded else { return [] }
         return [
             attachedPictures,
             title, titleSortOrder, artist, artistSortOrder, composer,
@@ -443,7 +437,7 @@ private extension Metadata {
 
     func pack() -> AudioMetadata {
         let metadata = AudioMetadata()
-        guard state.isInitialized else { return metadata }
+        guard state.isLoaded else { return metadata }
 
         metadata.title = title.current
         metadata.titleSortOrder = titleSortOrder.current
@@ -487,14 +481,14 @@ private extension Metadata {
 
 extension Metadata: Modifiable {
     var isModified: Bool {
-        guard state.isInitialized else { return false }
+        guard state.isLoaded else { return false }
         return restorables.contains(where: \.isModified)
     }
 }
 
 extension Metadata {
     func restore() {
-        guard state.isInitialized else { return }
+        guard state.isLoaded else { return }
         for var restorable in self.restorables {
             restorable.restore()
         }
@@ -507,7 +501,7 @@ extension Metadata {
     }
 
     func apply() {
-        guard state.isInitialized else { return }
+        guard state.isLoaded else { return }
         for var restorable in self.restorables {
             restorable.apply()
         }
@@ -521,7 +515,7 @@ extension Metadata {
 
     func generateThumbnail() async {
         guard
-            state.isInitialized,
+            state.isLoaded,
             let attachedPictures = self[extracting: \.attachedPictures]?.current
         else {
             thumbnail = nil
@@ -541,7 +535,7 @@ extension Metadata {
         }
     }
 
-    nonisolated func update(completion: (() -> ())? = nil) async throws(MetadataError) {
+    nonisolated func update() async throws(MetadataError) {
         guard url.isFileExist else {
             await updateState(to: state.with(error: .fileNotFound))
             throw .fileNotFound
@@ -567,13 +561,11 @@ extension Metadata {
 
         await updateState(to: .fine)
         await apply()
-        completion?()
-
         await generateThumbnail()
     }
 
     nonisolated func write(completion: (() -> ())? = nil) async throws(MetadataError) {
-        guard await state.isInitialized, await isModified else {
+        guard await state.isLoaded, await isModified else {
             completion?()
             return
         }
@@ -633,7 +625,7 @@ extension Metadata {
     func poll<V>(for keyPath: WritableKeyPath<Metadata, Entry<V>>) async -> MetadataBatchEditingEntry<V> {
         logger.info("Started polling metadata for \("\(keyPath)")")
 
-        while !state.isInitialized {
+        while !state.isLoaded {
             try? await Task.sleep(for: .milliseconds(100))
         }
 
@@ -649,7 +641,7 @@ extension Metadata {
 
     subscript<V>(extracting keyPath: WritableKeyPath<Metadata, Entry<V>>)
         -> MetadataBatchEditingEntry<V>? {
-        guard state.isInitialized else { return nil }
+        guard state.isLoaded else { return nil }
         return .init(keyPath: keyPath, metadata: self)
     }
 }
@@ -673,7 +665,7 @@ extension Metadata {
         let infoCenter = MPNowPlayingInfoCenter.default()
         var info = infoCenter.nowPlayingInfo ?? .init()
 
-        if state.isInitialized {
+        if state.isLoaded {
             updateNowPlayingInfo(for: &info)
         } else {
             Self.resetNowPlayingInfo(for: &info)
@@ -683,7 +675,7 @@ extension Metadata {
     }
 
     func updateNowPlayingInfo(for dict: inout [String: Any]) {
-        guard state.isInitialized else {
+        guard state.isLoaded else {
             return Self.resetNowPlayingInfo(for: &dict)
         }
 

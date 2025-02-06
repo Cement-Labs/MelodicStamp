@@ -43,7 +43,7 @@ struct TracksContextMenu: View {
     // MARK: - Singular
 
     @ViewBuilder private func singularActions(_ track: Track) -> some View {
-        let isInitialized = track.metadata.state.isInitialized
+        let isLoaded = track.metadata.state.isLoaded
         let isModified = track.metadata.isModified
 
         let title = MusicTitle.stringifiedTitle(mode: .title, for: track)
@@ -59,7 +59,7 @@ struct TracksContextMenu: View {
                 Text("Play \(title)")
             }
         }
-        .disabled(!isInitialized)
+        .disabled(!isLoaded)
         .keyboardShortcut(.return, modifiers: [])
 
         if playlist.mode.isCanonical {
@@ -90,7 +90,7 @@ struct TracksContextMenu: View {
                 try await track.metadata.write()
             }
         }
-        .disabled(!isInitialized || !isModified)
+        .disabled(!isLoaded || !isModified)
         .keyboardShortcut("s", modifiers: .command)
 
         // MARK: Restore Metadata
@@ -98,7 +98,7 @@ struct TracksContextMenu: View {
         Button("Restore Metadata") {
             track.metadata.restore()
         }
-        .disabled(!isInitialized || !isModified)
+        .disabled(!isLoaded || !isModified)
 
         // MARK: Reload Metadata
 
@@ -119,7 +119,7 @@ struct TracksContextMenu: View {
     // MARK: - Plural
 
     @ViewBuilder private func pluralActions(_ tracks: Set<Track>) -> some View {
-        let hasInitializedTrack = tracks.contains(where: \.metadata.state.isInitialized)
+        let hasInitializedTrack = tracks.contains(where: \.metadata.state.isLoaded)
         let hasModifiedTrack = tracks.contains(where: \.metadata.isModified)
 
         if playlist.mode.isCanonical {
